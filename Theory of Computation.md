@@ -265,6 +265,22 @@ That is, the language of A is the set of strings *w* τhat take the start state 
 
 >  If L is L(A) for some DFA A, then we say L is a **regular language.** 
 
+##### Minimizing a DFA
+
+A DFA is said to be minimzed when the removal of any state ε Q, changes the language accepted by it. 
+
+So if you find a state in a DFA, whose removal doesn't change the language accepted by it, the DFA is not the minimized DFA for the language.
+
+Before we think about removing states from a DFA, let's talk about the types of states that a DFA has in the context of minimization. 
+
+Every Minimal DFA for a language is unique. Why? Let's prove it.
+
+There are two ways to minimize a DFA -
+
+(i) Partitioning Method (uses more of common sense)
+
+(ii) Table Filling Method (application of the Myhill-Nerode Theorem)
+
 ### Nondeterministic Finite Automata	
 
 > ***A "nondeterministic" finite automaton (NFA) has the power to be in several states at once.*** 
@@ -350,7 +366,7 @@ Let us use ð to describe the processing of input 00101 by the NFA
 5. ð(q~0~, 0010) = δ(q~0~, 0)  ∪ δ(q~2~, 0) = {q~0~, q~1~}  ∪ ø = {q~0~, q~1~}.
 6. ð(q~0~, 00101) = δ(q~0~, 1)  ∪ δ(q~1~, 1) = {q~0~}  ∪ {q~2~} = {q~0~, q~2~}.
 
-### **The Language of an NFA**
+### The Language of an NFA
 
 As we have suggested, an NFA accepts a string *w* if it is possible to make any sequence of choices of next state, while reading the characters of *w*, and go from the start state to any accepting state. The fact thtat other choices using the input symbols of *w* lead to a non-accepting state, or do not lead to any state at all (i.e, the sequence of states "dies"), does not prevent *w* from being accepted by the NFA as a whole. Formally, if  A = (Q, Σ, δ, q~0~, F) is an NFA, then
 
@@ -359,6 +375,26 @@ As we have suggested, an NFA accepts a string *w* if it is possible to make any 
 That is, L(A) is the set of strings in Σ^*^ such that ð(q~0~, *w*) contains at least one acceptìng state.
 
 Note: Make sure you go through Example 2.9, to understand proof of acceptance of a language by an NFA through mutual induction.
+
+##### Equivalence of Deterministic and Nondeterministic Finite Automata
+
+Every languge that can be described by an NFA can also be described by some DFA. The DFA in practice has about as many states as the NFA, but it often has more transitions than the latter. In the worst case, the smallest DFA can have 2^n^ states, while the smallest NFA for the same language has only n states. 
+
+The proof that DFA's can do whatever NFA's can do involves an important "construction" called the *subset construction* because it involves constructing all subsets of the set of states of the NFA. 
+
+The subset construction starts from an NFA N = (Q~N~, Σ, δ~Ν~, q~0~, F~N~). The idea here is the description of a DFA D = (Q~D~, Σ, δ~D~, {q~0~}, F~D~) such that L(D) = L(N). The input alphabets of the two automata are same, and the star state of D is the set containing only the start state of N. The other components of D are constructed as follows -
+
+- Q~D~ is the set of subsets of Q~N~; *i.e*, Q~D~ is the *power set* of Q~N~. If Q~N~ has *n* states, Q~D~ will have 2^n^ states. Often, not all these states are accessible from the start state of Q~D~, and hence can be "thrown away", so effectively, the number of states of D may be much smaller than 2^n^. 
+
+- F~D~ is the set of subsets S of Q~N~ such that S ∩ F~N~ ≠ Φ. That is, F~D~ is all sets of N's states that include at least one accepting state of N.  
+
+- For each set S ⊆ Q~N~ and for each input symbol *a* in Σ, 
+
+  >  δ~D~(S, *a*) = ∪~p~ ~in~ ~S~ δ~Ν~(*p, a*)
+
+  That is, to comput δ~D~(S, *a*) we look at all the states *p* in S, see what states N goes to from *p* on input *a*, and take the union of all those states.
+
+**Theorem 2.12 - A Language L is accepted by some DFA if and only if L is accepted by some NFA.**
 
 ### Finite Automata with Epsilon-Transitions
 
@@ -381,7 +417,11 @@ where all components have their same interpretation as for an NFA, except that �
 
 We require that ε cannot be a member of the alphabet Σ, to avoid any confusion.
 
-Example: ε-ΝFA that accepts decimal numbers consisting of: 
+An interesting notion regarding ε-transitions is the fact that you can divide a system into separate entities using them, without having the need to connect each entity with a logical input. 
+
+One must also consider that, the power of ε-transitions in the context of non-determinism lies in the fact that when you are at a state that has multiple outgoing ε-transitions to a set of other states, you are basically present in those states parallely as well, since transitioning to those states requires no input. What I can make of this is the idea that ε-transitions give you a crude way to implement parallel processing. 
+
+**Example:** ε-ΝFA that accepts decimal numbers consisting of: 
 
  	1. An optional + or - sign,
 	2. A string of digits,
@@ -440,6 +480,21 @@ Basically, you can infer the following from the above steps -
 > L(E) = { *w* | ð(*q~0~, w*) **∩** F ≠ φ }
 
 That is, the language of E is the set of strings *w* that take the start state to at least one accepting state. 
+
+##### Eliminating ε-Τransitions:
+
+When you convert an ε-ΝFA to an NFA, the number of states remain the same.
+
+You use ε-closure as a tool for this conversion process in the context of redefining the transition function.
+
+> **ð~NFA~(q~i~, x) = ECLOSE(δ~ε-ΝFA~(ECLOSE(q~i~), x))**
+
+
+The states of the ε-NFA that contain the final state of the ε-ΝFA in it's ε-closure will be the final states of the converted NFA.
+
+One can make sense of the above, with a proper understanding of ε-transitions.
+
+Consider a case where you have an ε-ΝFA, and you are in a state q~i~. In order to determine the transition from q~i~ upon the input x, you would also have to consider the states that q~i~ leads to upon recieving ε, as they can somewhat be considered synonymous to q~i~ in a very crude sense, as giving the input x to q~i~ is also equivalent to giving x to those states as well, as they are just a null input away from q~i~. Hence you take ε-closure(q~i~) and then give those set of states the input x, and find their transitions. Once you find out the transitions of these set of states upon recieving an input x, you would then arrive at another set of state(s), after which you have to repeat the ε-closure for these states, as the states connected to these states upon ε are the states that are reached in the end, for the NFA we are trying to construct without these ε transitions. Similarly, the final states of the converted NFA are constructed upon the same logic.
 
 ### Regular Expressions
 
@@ -537,6 +592,8 @@ Like other algebras, RE operators have an assumed order of "precedence", as foll
 2. .
 3. +
 
+*i.e* - ==*== > ==.== > ==+==
+
 You begin with the star operator first. The star operator applies to the smallest sequence of symbols to its left that is a well-formed expression.
 
 The concatenation operator comes next. Without the "dot" operator, all expressions that are juxtaposed are grouped together. Concatenation is associative. It doesn't matter in what order you group consecutive concats, although if there is a choice to be made, you would want to group them from the left. For instance, 012 is grouped as (01)2.
@@ -547,8 +604,12 @@ We are free to use parantheses as well to group operands exactly as we choose. Y
 
 To have a thorough understanding of the use of precedence and parantheses, make sure you go through Example 3.3 (page-91).	
 
+A language is said to be regular if there exists a regular expression to represent it.
 
-​			
+##### Finite Automata and Regular Expressions 
+
+##### 			
+
 ​		
 ​	
 
