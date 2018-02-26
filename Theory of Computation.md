@@ -1,3 +1,7 @@
+---
+typora-copy-images-to: ./Diagrams
+---
+
 # 	Theory of Computation
 
 ## 	Automata: The Methods and the Madness
@@ -257,7 +261,7 @@ Now, we can define the language of a DFA A = (Q, Σ, δ, q~0~, F). This language
 
 > **L(A) = { *w* | ð(q~0~, *w*) is in F }**		
 
-That is, the language of A is the set of strings ω τhat take the start state q~0~ to one of the accepting states.
+That is, the language of A is the set of strings *w* τhat take the start state q~0~ to one of the accepting states.
 
 >  If L is L(A) for some DFA A, then we say L is a **regular language.** 
 
@@ -321,21 +325,21 @@ The given NFA can be specified formally as **({q~0~,q~1~,q~2~},{0, 1},δ,q~0~, {
 
 Notice that transition tables can be used to specify the transition function for an NFA as well as for a DFA. The only difference is that each entry in the table for the NFA is a set, even if the set is a singleton (has one member). Also notice that when there is no transition at all from a given state on a given input symbol, the proper entry is 0, the empty set.
 
-As for DFA's, we need to extend the transition function δ of an NFA to a function ð that takes a state q and a string of input symbols ω, and returns the set of states that the NFA is in if it starts in state q and processes the string ω.
+As for DFA's, we need to extend the transition function δ of an NFA to a function ð that takes a state q and a string of input symbols *w*, and returns the set of states that the NFA is in if it starts in state q and processes the string *w*.
 
-The idea was suggested by the previous diagram, in essence ð(q,ω) is the column of states
-found after reading ω, lf q is the lone state in the first column. 
+The idea was suggested by the previous diagram, in essence ð(q, *w*) is the column of states
+found after reading *w*, lf q is the lone state in the first column. 
 
 For instance, it suggests that  ð(q~0~, 001) = {q~0~, q~2~}. Formally, we define ð for an NFA's transition function ð by: 
 
 
 **BASIS:**  δ(q, ε) = {q}. That is, without reading any input symbols, we are only in the state we began in.
 
-**INDUCTION:** Suppose *w* is of the form ω=xa, where a is the final symbol of *w* and x is the rest of *w*. Also suppose that ð(q, x) = {p~l~, p~2~, …, p~k~}. 
+**INDUCTION:** Suppose *w* is of the form *w*=xa, where a is the final symbol of *w* and x is the rest of *w*. Also suppose that ð(q, x) = {p~l~, p~2~, …, p~k~}. 
 
 Let ![Screen Shot 2018-02-17 at 20.49.45](/Users/vishhvaksrinivasan/Stuff/Course Stuff/TOC-Notes/Diagrams/Union I.png)
 
-Then ð(q,ω)= {r~1~,r~2~,. . . ,r~m~}. Less formally, we compute ð(q,ω) by first computing ð(q,x), and by then following any transition from any of these states that is labeled a.
+Then ð(q, *w*)= {r~1~,r~2~,. . . ,r~m~}. Less formally, we compute ð(q, *w*) by first computing ð(q,x), and by then following any transition from any of these states that is labeled a.
 
 Let us use ð to describe the processing of input 00101 by the NFA 			
 
@@ -346,11 +350,11 @@ Let us use ð to describe the processing of input 00101 by the NFA
 5. ð(q~0~, 0010) = δ(q~0~, 0)  ∪ δ(q~2~, 0) = {q~0~, q~1~}  ∪ ø = {q~0~, q~1~}.
 6. ð(q~0~, 00101) = δ(q~0~, 1)  ∪ δ(q~1~, 1) = {q~0~}  ∪ {q~2~} = {q~0~, q~2~}.
 
-##### **The Language of an NFA**
+### **The Language of an NFA**
 
-As we have suggested, an NFA accepts a string ω if it is possible to make any sequence of choices of next state, while reading the characters of ω, and go from the start state to any accepting state. The fact thtat other choices using the input symbols of ω lead to a non-accepting state, or do not lead to any state at all (i.e, the sequence of states "dies"), does not prevent ω from being accepted by the NFA as a whole. Formally, if  A = (Q, Σ, δ, q~0~, F) is an NFA, then
+As we have suggested, an NFA accepts a string *w* if it is possible to make any sequence of choices of next state, while reading the characters of *w*, and go from the start state to any accepting state. The fact thtat other choices using the input symbols of *w* lead to a non-accepting state, or do not lead to any state at all (i.e, the sequence of states "dies"), does not prevent *w* from being accepted by the NFA as a whole. Formally, if  A = (Q, Σ, δ, q~0~, F) is an NFA, then
 
-> ​						***L(A) = { ω |ð(q~0~, w) ∩ F ≠ ø }***
+> ​						**L(A) = { w |ð(q~0~, w) ∩ F ≠ ø }**
 
 That is, L(A) is the set of strings in Σ^*^ such that ð(q~0~, *w*) contains at least one acceptìng state.
 
@@ -437,26 +441,111 @@ Basically, you can infer the following from the above steps -
 
 That is, the language of E is the set of strings *w* that take the start state to at least one accepting state. 
 
-​					
+### Regular Expressions
 
+-  Form of language-defining notation.
+- Closely related to nondeterministic finite automata, can be though of as a user-friendly alternative.
+- Capable of defining all and only the regular languages.
+- Algebraic descriptions of languages. 
+- Defines the same languages that other forms of automata define - regular langugages.
+- Serve as input language for many systems that process strings.
 
-​			
-​		
-​	
+Example - **01* + 10*** - represents the language consisting of strings either starting with a single 0 and followed by any number of 1's, or a single 1 followed by any number of 0's. 
 
-​	
-​	
-​	
-​		
-​			
-​				
-​					
+##### Operators of Regular Expressions
 
+Before describing the regular-expression notation, we need to learn the three operations on languages that the operators of regular expressions represent -
 
-​				
-​			
-​		
-​	
+1. The *union* . of two languages L and M, denoted by L ∪ M, is the set of strings that are either in L or M, or both.  For example, if L = {001, 10, 111} and M = {ε, 001}, then L ∪ M = {ε, 10, 001, 111}. 
+
+2. Τhe *concatenation* of languages L and M is the set of strings that can be formed by taking any string in L and concatenating it with any string in M. Taking the languages mentioned in (1), L.M or LM = {10, 001, 111, 10001, 001001, 111001}. 
+
+3. The *closure (or star, or Kleene closure)* of a language L is denoted L* and represents the set of those strings that can be formed by taking any number of strings from L, possibly with repetitions (i.e, the same string may be selected more than once), and concatenating all of them. For instance, if L = {0,1}, then L* is all strings of 0's and 1's. If L = {0, 11}, then L* consists of those strings of 0's and 1's such that 1's come in pairs, e.g - 011, 11110, and ε, but not 010111, or 101. 
+
+   *More formally,* 
+
+   > **L* is the inifnite union ∪~i≥0~ L^i^, where L^0^= {ε} and L^i^, for i > 1, is LL…L (the concatenation of *i* copies of L).**
+
+Note: Go through Example 3.1 (page 87), in the book to get a better idea of Kleene Closure.
+
+###### Use of the Star Operator 
+
+We saw the star operator first, where we applied it to an alphabet, e.g Σ*. That operator formed all strings whose symbols were chosen from alphabet Σ. Τhe closure operator is basically the same, although there is a very small difference. 
+
+Say L is the language consisting of strings of length 1, and for each symbol *s* in Σ, there is a string *s,* in L. Then, even though L and Σ look the same, they are of different types. L is a set of strings, and Σ is a set of symbols. On the other hand, L* denotes the same language as Σ*. 
+
+*Expressions and their Languages* - Strictly speaking, a regular expression E is just an expression, and not a language, and we should ideally be using L(E) when speaking of the language of the regular expression. However, we shall use the commonly used or refferred convention that employs the usage of "E" when we really mean "L(E)".
+
+#### Building Regular Expressions
+
+Algebra of regular expression follows the basic patten followed in any algebra, using constants and variables that denote languages, and operators for the three operations described above, namely - union, dot and star. The recursive definition of RE's goes as -
+
+**BASIS**: 
+
+1. The constants ε and Φ are regular expressions, denoting the languages {ε} and Φ respectively. That is, L(ε) = {e}, and L(Φ) = Φ.
+2. Ιf *a* is any symbol, then **a** is a regular expression. This denotes the language {a}, *i.e*, L(a) = {a}. 
+3. A variable, usually capitalized (and maybe italic), such as L, is a variable representing any language.
+
+**INDUCTION**:
+
+1. If E and F are regular expressions, E + F is a regular expression denoting the union of L(E) and L(F). 
+
+   > L(E+F) = L(E) + L(F)
+
+2. If E and F are regular expressions, EF is a RE denoting the concatenation of L(E) and L(F).
+
+   > L(EF) = L(E)L(F)
+
+3. If E is a regular expression, then E* is a regular expression, denoting the Kleene Closure (or just Closure) of L(E). 
+
+   > L(E*) = (L(E))\* 
+
+4.  If E is a regular expression, then (E) is also a regular expression. 
+
+   > L((E)) = L(E)
+
+Example 3.2: Write a Regular expression for the set of strings that consist of alternating 0's and 1's. 
+
+There are 2 cases, with 2 subcases each.
+
+1. The string begins with 0. 
+
+   a. The string ends with 1.
+
+   b. The string ends with 0.
+
+2. The String begins with 1.
+
+   a. The string ends with 1.
+
+   b. The string ends with 0.			
+
+Case 1 (a) = **(01)***, Case 1(b) = **0(10)***	
+Case 2(a) = **1(01)***, Case 2(b) = **1(10)***
+
+​The overall regular expression is the union of the expressions produced in all cases -
+
+> ​	**(01)\* + (10)\* + 1(01)\* + 0(10)\***
+
+There is another approach to this problem, mentioned in the book. Being the reader, I would suggest you try to think. (Hint: Use ε!)
+
+#### Precedence of Regular Expression Operators
+
+Like other algebras, RE operators have an assumed order of "precedence", as follows -
+
+1. *
+2. .
+3. +
+
+You begin with the star operator first. The star operator applies to the smallest sequence of symbols to its left that is a well-formed expression.
+
+The concatenation operator comes next. Without the "dot" operator, all expressions that are juxtaposed are grouped together. Concatenation is associative. It doesn't matter in what order you group consecutive concats, although if there is a choice to be made, you would want to group them from the left. For instance, 012 is grouped as (01)2.
+
+Finally, all unions (+ operators) are grouped with their operands. Union is also associative. Order of grouping doesn't matter, although we shall assume grouping from the left.
+
+We are free to use parantheses as well to group operands exactly as we choose. You can also put parantheses around operands you want to group, even if the desired grouping is implied by the rules of precedence. 		
+
+To have a thorough understanding of the use of precedence and parantheses, make sure you go through Example 3.3 (page-91).	
 
 
 ​			
